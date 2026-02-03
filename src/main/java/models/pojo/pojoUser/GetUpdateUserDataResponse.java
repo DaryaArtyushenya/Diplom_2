@@ -1,4 +1,4 @@
-package models.pojo;
+package models.pojo.pojoUser;
 
 public class GetUpdateUserDataResponse {
     private Boolean success;

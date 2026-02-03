@@ -4,8 +4,9 @@ import api.UserApi;
 import factory.UserFactory;
 import io.restassured.RestAssured;
 import models.data.UserModel;
-import models.pojo.UserErrorResponse;
-import models.pojo.CreateLoginUserResponse;
+import models.pojo.pojoUser.UserErrorResponse;
+import models.pojo.pojoUser.CreateLoginUserResponse;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,7 @@ public class LoginUserTests {
         UserModel userModel = UserFactory.userWithoutPassword();
         UserErrorResponse userErrorResponse = userApi.loginUserApi(userModel)
                 .then()
-                .statusCode(401)
+                .statusCode(HttpStatus.SC_UNAUTHORIZED)
                 .extract().as(UserErrorResponse.class);
         assertFalse(userErrorResponse.getSuccess());
         assertEquals("email or password are incorrect", userErrorResponse.getMessage());
@@ -50,7 +51,7 @@ public class LoginUserTests {
         UserModel userModel = UserFactory.userWithoutEmail();
         UserErrorResponse userErrorResponse = userApi.loginUserApi(userModel)
                 .then()
-                .statusCode(401)
+                .statusCode(HttpStatus.SC_UNAUTHORIZED)
                 .extract().as(UserErrorResponse.class);
         assertFalse(userErrorResponse.getSuccess());
         assertEquals("email or password are incorrect", userErrorResponse.getMessage());

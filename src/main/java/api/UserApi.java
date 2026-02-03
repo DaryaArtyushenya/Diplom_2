@@ -3,7 +3,7 @@ package api;
 import io.qameta.allure.Step;
 import models.data.UserModel;
 import io.restassured.response.Response;
-import models.pojo.UpdateUserRequest;
+import models.pojo.pojoUser.UpdateUserRequest;
 
 import static io.restassured.RestAssured.given;
 

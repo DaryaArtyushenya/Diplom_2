@@ -1,4 +1,4 @@
-package models.pojo;
+package models.pojo.pojoUser;
 
 import io.qameta.allure.internal.shadowed.jackson.annotation.JsonInclude;
 

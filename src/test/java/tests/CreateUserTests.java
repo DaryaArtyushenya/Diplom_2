@@ -4,8 +4,9 @@ import factory.UserFactory;
 import api.UserApi;
 import io.restassured.RestAssured;
 import models.data.UserModel;
-import models.pojo.CreateLoginUserResponse;
-import models.pojo.UserErrorResponse;
+import models.pojo.pojoUser.CreateLoginUserResponse;
+import models.pojo.pojoUser.UserErrorResponse;
+import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class CreateUserTests {
     userApi.createUserApi(userModel);
     UserErrorResponse userErrorResponse = userApi.createUserApi(userModel)
             .then()
-            .statusCode(403)
+            .statusCode(HttpStatus.SC_FORBIDDEN)
             .extract().as(UserErrorResponse.class);
     assertFalse(userErrorResponse.getSuccess());
     assertEquals("User already exists", userErrorResponse.getMessage());
@@ -53,7 +54,7 @@ public class CreateUserTests {
         UserModel userModel = UserFactory.userWithoutEmail();
         UserErrorResponse createUserErrorResponse = userApi.createUserApi(userModel)
                 .then()
-                .statusCode(403)
+                .statusCode(HttpStatus.SC_FORBIDDEN)
                 .extract().as(UserErrorResponse.class);
     assertFalse(createUserErrorResponse.getSuccess());
     assertEquals("Email, password and name are required fields", createUserErrorResponse.getMessage());
@@ -64,7 +65,7 @@ public class CreateUserTests {
         UserModel userModel = UserFactory.userWithoutPassword();
         UserErrorResponse createUserErrorResponse = userApi.createUserApi(userModel)
                 .then()
-                .statusCode(403)
+                .statusCode(HttpStatus.SC_FORBIDDEN)
                 .extract().as(UserErrorResponse.class);
         assertFalse(createUserErrorResponse.getSuccess());
         assertEquals("Email, password and name are required fields", createUserErrorResponse.getMessage());
@@ -75,7 +76,7 @@ public class CreateUserTests {
         UserModel userModel = UserFactory.userWithoutName();
         UserErrorResponse createUserErrorResponse = userApi.createUserApi(userModel)
                 .then()
-                .statusCode(403)
+                .statusCode(HttpStatus.SC_FORBIDDEN)
                 .extract().as(UserErrorResponse.class);
         assertFalse(createUserErrorResponse.getSuccess());
         assertEquals("Email, password and name are required fields", createUserErrorResponse.getMessage());
