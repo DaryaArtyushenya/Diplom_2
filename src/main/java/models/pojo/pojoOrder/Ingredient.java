@@ -1,13 +1,13 @@
 package models.pojo.pojoOrder;
 
-public class Ingredients {
+public class Ingredient {
     private String id;
 
-    public Ingredients(String id) {
+    public Ingredient(String id) {
         this.id = id;
     }
 
-    public Ingredients() {
+    public Ingredient() {
     }
 
     public String getId() {

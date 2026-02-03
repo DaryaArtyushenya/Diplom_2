@@ -9,12 +9,12 @@ public class OrderAuthorizeUser extends OrderGuest {
     private String name;
     private String status;
     private List<Owner> owners;
-    private List<String> ingredients;
+    private List<Ingredient> ingredients;
 
     public OrderAuthorizeUser() {
     }
 
-    public OrderAuthorizeUser(Integer number, String price, String updatedAt, String createdAt, String name, String status, List<Owner> owners, List<String> ingredients) {
+    public OrderAuthorizeUser(Integer number, String price, String updatedAt, String createdAt, String name, String status, List<Owner> owners, List<Ingredient> ingredients) {
         super(number);
         this.price = price;
         this.updatedAt = updatedAt;
@@ -73,11 +73,11 @@ public class OrderAuthorizeUser extends OrderGuest {
         this.owners = owners;
     }
 
-    public List<String> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<String> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 }
