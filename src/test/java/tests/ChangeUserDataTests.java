@@ -11,6 +11,7 @@ import models.pojo.pojoUser.GetUpdateUserDataResponse;
 import models.pojo.pojoUser.UpdateUserRequest;
 import models.pojo.pojoUser.UserErrorResponse;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,10 +27,12 @@ public class ChangeUserDataTests {
     }
     UserApi userApi = new UserApi();
     Faker faker = new Faker();
+    private UserModel userModel;
+    private UserModel userModel1;
     @Test
     @DisplayName("Проверка обновления имейла пользователя")
     void successUpdateUserEmailTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         userApi.createUserApi(userModel);
         Response response = userApi.loginUserApi(userModel);
         String token = response.jsonPath().getString("accessToken");
@@ -46,7 +49,7 @@ public class ChangeUserDataTests {
     @Test
     @DisplayName("Проверка обновления имени пользователя")
     void successUpdateUserNameTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         userApi.createUserApi(userModel);
         Response response = userApi.loginUserApi(userModel);
         String token = response.jsonPath().getString("accessToken");
@@ -75,8 +78,8 @@ public class ChangeUserDataTests {
     @Test
     @DisplayName("Проверка обновления имейла пользователя на уже существующий")
     void userAlreadyExistUpdateTest(){
-        UserModel userModel = UserFactory.correctUser();
-        UserModel userModel1 = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
+        userModel1 = UserFactory.correctUser();
         userApi.createUserApi(userModel);
         userApi.createUserApi(userModel1);
         Response response = userApi.loginUserApi(userModel);
@@ -90,7 +93,17 @@ public class ChangeUserDataTests {
                 .statusCode(HttpStatus.SC_FORBIDDEN)
                 .extract().as(UserErrorResponse.class);
         assertEquals("User with such email already exists", userErrorResponse.getMessage());
-        userApi.removeUserApi(userModel);
+    }
+
+    @AfterEach
+    void removeUser(){
+        if(userModel!=null){
+            userApi.removeUserApi(userModel);
+        }
+        if(userModel1!=null){
+            userApi.removeUserApi(userModel1);
+        }
+
     }
 
 

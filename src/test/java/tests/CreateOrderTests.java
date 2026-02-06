@@ -13,6 +13,7 @@ import models.pojo.pojoOrder.CreateOrderRequest;
 import models.pojo.pojoOrder.CreateOrderResponseGuest;
 import models.pojo.pojoOrder.OrderResponseError;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ public class CreateOrderTests {
     }
     UserApi userApi = new UserApi();
     OrderApi orderApi = new OrderApi();
+    private UserModel userModel;
     @Test
     @DisplayName("Создание ордера для неавторизованного пользователя")
     void successOrderForGuestTest(){
@@ -42,7 +44,7 @@ public class CreateOrderTests {
     @Test
     @DisplayName("Создание ордера для авторизованного пользователя")
     void successOrderForAuthorizeUserTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         CreateOrderRequest createOrderRequest = IngredientsFactory.validOrder();
         userApi.createUserApi(userModel);
         Response response = userApi.loginUserApi(userModel);
@@ -54,12 +56,11 @@ public class CreateOrderTests {
         assertTrue(createOrderAuthorizeUserResponse.getSuccess());
         assertNotNull(createOrderAuthorizeUserResponse.getOrder());
         assertNotNull(createOrderAuthorizeUserResponse.getName());
-        userApi.removeUserApi(userModel);
     }
     @Test
     @DisplayName("Попытка создать ордер с невалидными ингредиентами")
     void createOrderWithNullIngredientsTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         CreateOrderRequest createOrderRequest = IngredientsFactory.nullIngredients();
         userApi.createUserApi(userModel);
         Response response = userApi.loginUserApi(userModel);
@@ -67,12 +68,11 @@ public class CreateOrderTests {
         orderApi.createOrderAuthorizeUserApi(createOrderRequest, token)
                 .then()
                 .statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
-        userApi.removeUserApi(userModel);
     }
     @Test
     @DisplayName("Попытка создания ордера с несуществующими ингредиентами")
     void createOrderWithInvalidIngredientsHashTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         CreateOrderRequest createOrderRequest = IngredientsFactory.invalidIngredientHash();
         System.out.println(new Gson().toJson(createOrderRequest));
         userApi.createUserApi(userModel);
@@ -83,13 +83,11 @@ public class CreateOrderTests {
                 .statusCode(HttpStatus.SC_BAD_REQUEST).extract().as(OrderResponseError.class);
         assertFalse(orderResponseError.getSuccess());
         assertEquals("One or more ids provided are incorrect", orderResponseError.getMessage() );
-        userApi.removeUserApi(userModel);
-
     }
     @Test
     @DisplayName("Попытка создать ордер не передав ингредиенты")
     void createOrderWithoutIngredientsTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         CreateOrderRequest createOrderRequest = IngredientsFactory.orderWithoutIngredients();
         System.out.println(new Gson().toJson(createOrderRequest));
         userApi.createUserApi(userModel);
@@ -100,8 +98,13 @@ public class CreateOrderTests {
                 .statusCode(HttpStatus.SC_BAD_REQUEST).extract().as(OrderResponseError.class);
         assertFalse(orderResponseError.getSuccess());
         assertEquals("Ingredient ids must be provided", orderResponseError.getMessage() );
-        userApi.removeUserApi(userModel);
+    }
 
+    @AfterEach
+    void removeUser(){
+        if(userModel !=null){
+            userApi.removeUserApi(userModel);
+        }
     }
 
 }

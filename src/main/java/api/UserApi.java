@@ -10,14 +10,14 @@ import static io.restassured.RestAssured.given;
 public class UserApi {
     @Step("Создание  пользователя")
     public Response createUserApi(UserModel userModel){
-        return given().log().all()
+        return given()
                 .header("Content-type","application/json")
                 .body(userModel)
                 .post("/api/auth/register");
     }
     @Step("Авторизация пользователя")
     public Response loginUserApi(UserModel userModel){
-        return given().log().all()
+        return given()
                 .header("Content-type","application/json")
                 .body(userModel)
                 .post("/api/auth/login");

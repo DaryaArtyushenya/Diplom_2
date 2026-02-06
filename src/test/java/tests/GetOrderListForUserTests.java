@@ -8,10 +8,10 @@ import io.restassured.response.Response;
 import models.data.UserModel;
 import models.pojo.pojoOrder.OrderListResponse;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -20,8 +20,10 @@ public class GetOrderListForUserTests {
     void setUp(){
         RestAssured.baseURI = "https://stellarburgers.education-services.ru";
     }
+
     OrderApi orderApi = new OrderApi();
     UserApi userApi = new UserApi();
+    private UserModel userModel;
     @Test
     @DisplayName("Получение списка ордеров для неавторизованного пользователя")
     void getOrdersForGuestTest(){
@@ -37,7 +39,7 @@ public class GetOrderListForUserTests {
     @Test
     @DisplayName("Получение списка ордеров авторизованного пользователя")
     void getOrdersForAuthorizeUserTest(){
-        UserModel userModel = UserFactory.correctUser();
+        userModel = UserFactory.correctUser();
         userApi.createUserApi(userModel);
         Response response = userApi.loginUserApi(userModel);
         String token = response.jsonPath().getString("accessToken");
@@ -49,6 +51,11 @@ public class GetOrderListForUserTests {
         assertNotNull(orderListResponse.getOrders());
         assertNotNull(orderListResponse.getTotal());
         assertNotNull(orderListResponse.getTotalToday());
-        userApi.removeUserApi(userModel);
+    }
+    @AfterEach
+    void removeUser(){
+        if(userModel!=null){
+            userApi.removeUserApi(userModel);
+        }
     }
 }

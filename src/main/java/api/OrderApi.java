@@ -9,7 +9,7 @@ import static io.restassured.RestAssured.given;
 public class OrderApi {
     @Step("Создание заказа для гостя")
     public Response createOrderApi(CreateOrderRequest createOrderRequest){
-        return given().log().all()
+        return given()
                 .header("Content-type","application/json")
                 .body(createOrderRequest)
                 .post("/api/orders");
